@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    
+    <link rel="stylesheet" href="style.css"></script>
     <title>GITHUB-REPOSITORY</title>
 </head>
 
@@ -17,14 +17,39 @@
 <div class="container">
     <h3> REPOSITORY FINDER </h3>
 
-    <div class="mx-auto" style="width: 500px;" > 
-      <label for="username">Github username</label>
-      <input type="text" name="username" class="username" placeholder="Enter Github name">
-      <input type="submit" class="btn btn-primary submit">
-    </div>
-
+    <form name="github-user-form" id="github-form" method="POST" class="form-inline"></form>
+     
+        <label for="username">Github username</label>
+        <input type="text" name="username" class="username" placeholder="Enter Github name">
+        <input type="submit" class="btn btn-primary submit">
       <div class="result mt-2"></div>
+    </form>
 
+        <!--Creates the popup body-->
+      <div class="popup-overlay">
+        <!--Creates the popup content-->
+        <div class="popup-content">
+            <h2>REPOSITORY</h2>
+          <!--popup's close button-->
+           
+            
+            <form id="issue-form" method="POST">
+                <div class="msg"></div>
+                 
+                <div class="form-group">
+                    <label for="issue-title">Title</label>
+                    <input name="title" type="text" class="form-control" id="issue-title" placeholder="">
+                </div>
+                
+                <div class="form-group">
+                    <label for="issue-description">Description</label>
+                    <textarea name="body" class="form-control" id="issue-description" rows="3" id="issue-description"></textarea>
+                </div>
+                <button type="submit" class="submit-issue">Create Issue</button>   
+                <button class="close">Close</button>   
+            </form>
+        </div>
+      </div>
 </div>
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
