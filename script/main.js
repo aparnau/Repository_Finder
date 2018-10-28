@@ -1,7 +1,9 @@
-var GH = GH || {};
+/* jshint esversion: 6 */
+
+let GH = {};
 
 (function ($, fn) { 
-  var selector = {
+  let selector = {
       "submitButton": ".submit",
       "gitUserName": ".username",
       "repoResult": ".result",
@@ -9,36 +11,40 @@ var GH = GH || {};
       "popupOverlay": ".popup-overlay",
       "popupContent": ".popup-content",
       "createIssue": ".create-issue",
-      "close": ".close",
-      "CONSTANTS": {
-          "GITHUB_API_KEY": "Bv8KPhTcf-JDMPrkLHXzeznXbVg"
-      }
+      "close": ".close"
   },
   repos,
   accessToken,
   currentRepo,
   currentUsername,
-  list = $('<table class="table table-dark"> <tbody>');
+  list = $('<table class="table table-dark"> <tbody>'),
+  username,
+  name,
+  url,
+  formData,
+  createIssueUri;
+
+  const  GITHUB_API_KEY = "Bv8KPhTcf-JDMPrkLHXzeznXbVg";
 
   fn.init = function() {
-    OAuth.initialize(selector.CONSTANTS.GITHUB_API_KEY);
+    OAuth.initialize(GITHUB_API_KEY);
     this.bindEvents();
   },
 
   fn.bindEvents = function() {
     $(selector.submitButton).click(function() {
-      var username = $(selector.gitUserName).val();
+      username = $(selector.gitUserName).val();
       currentUsername = username;
       $(selector.repoResult).displayRepositories(username);
     });
 
     $(selector.issueForm).submit(function(e){
       e.preventDefault();
-      var name =  $(selector.popupOverlay).data("repos");
+      name =  $(selector.popupOverlay).data("repos");
+      url = 'https://api.github.com/repos/'+currentUsername+'/'+currentRepo+'/issues';
+      formData = JSON.stringify({title: $(this).get(0).title.value, body: $(this).get(0).body.value});
+      let _this = this;
 
-      var url = 'https://api.github.com/repos/'+currentUsername+'/'+currentRepo+'/issues';
-      var formData = JSON.stringify({title: $(this).get(0).title.value, body: $(this).get(0).body.value});
-      var _this = this;
       $.ajax({
          type: "POST",
          headers: {"Authorization": "token " + accessToken},
@@ -46,6 +52,7 @@ var GH = GH || {};
           data: formData,
           success: function() {
             alert("Issues created!");
+            window.location.href = 'https://github.com/'+currentUsername+'/'+currentRepo+'/issues'; 
           },
         });
     });
@@ -68,7 +75,7 @@ var GH = GH || {};
   },
 
   $.fn.displayRepositories = function(username) {
-    var target = this,
+    let target = this,
        // gitPath = '//api.github.com/users/'+username+'/repos?callback=?';
         gitPath = '//api.github.com/users/'+username+'/repos?client_id=f6b388012ae4c7a01738&client_secret=0350ead7898e43aef9a6b3304c7fddef7ce0961a';
     this.html("<span>Querying GitHub for " + username +"'s repositories..</span>");
@@ -82,13 +89,11 @@ var GH = GH || {};
           list.append('<tr> <td>' + repos + '</td> <td> <a href="#" class="btn btn-default create-issue" data-name='+repos+' > New Issue </a></td> </tr>');
         });
         list.append('</tbody></table>');
-
-        
     });
   },
 
   fn.createIssue= function(ele) {
-    var createIssueUri = 'https://api.github.com/repos/'+username+'/'+repos+'/issues';
+    createIssueUri = 'https://api.github.com/repos/'+username+'/'+repos+'/issues';
   
     $.ajax({
        type: "POST",
